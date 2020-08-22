@@ -1,6 +1,8 @@
 from django.contrib.auth.models import Group, User
 from rest_framework import serializers
 
+from .models import Departamento, Funcionario
+
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -22,3 +24,33 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         model = Group
         fields = ['url', 'name']
         extra_kwargs = {'url': {'view_name': 'core:group-detail'}}
+
+
+class FuncionarioSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Funcionario
+        fields = (
+            'url',
+            'nome',
+            'funcao',
+            'idade',
+            'user',
+            'departamento',
+        )
+        extra_kwargs = {
+            'url': {'view_name': 'core:funcionario-detail',},
+            'departamento': {'view_name': 'core:departamento-detail',},
+            'user': {'view_name': 'core:user-detail',},
+        }
+
+
+class DepartamentoSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Funcionario
+        fields = (
+            'url',
+            'nome',
+        )
+        extra_kwargs = {
+            'url': {'view_name': 'core:departamento-detail',},
+        }

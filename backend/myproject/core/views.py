@@ -1,7 +1,9 @@
 from django.contrib.auth.models import Group, User
 from rest_framework import permissions, viewsets
 
-from .serializers import GroupSerializer, UserSerializer
+from .models import Departamento, Funcionario
+from .serializers import (DepartamentoSerializer, FuncionarioSerializer,
+                          GroupSerializer, UserSerializer)
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -21,4 +23,24 @@ class GroupViewSet(viewsets.ModelViewSet):
 
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class FuncionarioViewSet(viewsets.ModelViewSet):
+    '''
+    This viewset automtically provides `list` and `detail` actions for funcionarios.
+    '''
+
+    queryset = Funcionario.objects.all()
+    serializer_class = FuncionarioSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class DepartamentoViewSet(viewsets.ModelViewSet):
+    '''
+    This viewset automtically provides `list` and `detail` actions for departamentos.
+    '''
+
+    queryset = Departamento.objects.all()
+    serializer_class = DepartamentoSerializer
     permission_classes = [permissions.IsAuthenticated]
