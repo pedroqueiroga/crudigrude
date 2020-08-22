@@ -1,3 +1,4 @@
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group, User
 from rest_framework import serializers
 
@@ -11,6 +12,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             'url',
             'username',
             'email',
+            'password',
             'groups',
             'funcionario',
         )
@@ -20,6 +22,9 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             'groups': {'view_name': 'core:group-detail',},
             'funcionario': {'view_name': 'core:funcionario-detail',},
         }
+
+    def validate_password(self, value):
+        return make_password(value)
 
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):

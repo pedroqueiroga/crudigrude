@@ -12,18 +12,30 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         return request.user == obj.user
 
 
-class CustomUserPermission(permissions.BasePermission):
-    """Makes it so that unauthenticated users can only create users 
-    and only staff can check out the list of users"""
+class CreateUserPermissions(permissions.BasePermission):
+    """Users can only be created by admin or unauthenticated users"""
 
     def has_permission(self, request, view):
-        if not request.user.is_authenticated:
-            return request.method == 'POST'
-        return request.user.is_staff
+        if view.action == 'create':
+            return (not request.user.is_authenticated) or request.user.is_staff
+        return True
+
+
+class ListForAdminsOnly(permissions.BasePermission):
+    """Lists only allowed for admin"""
+
+    def has_permission(self, request, view):
+        if view.action == 'list':
+            return request.user and request.user.is_staff
+        return True
 
 
 class IsSelfOrAdmin(permissions.BasePermission):
     """Allows self or staff."""
 
     def has_object_permission(self, request, view, obj):
-        return request.user.is_staff or request.user == obj
+        return (
+            request.user
+            and request.user.is_authenticated
+            and (request.user.is_staff or request.user == obj)
+        )
