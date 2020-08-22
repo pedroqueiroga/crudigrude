@@ -19,22 +19,6 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             'groups': {'view_name': 'core:group-detail',},
         }
 
-    def create(self, validated_data):
-        """Creates an empty Funcionario associated with this user."""
-        user = User.objects.create(
-            email=validated_data['email'], username=validated_data['username'],
-        )
-        user.groups.set(validated_data['groups'])
-        try:
-            funcionario = Funcionario.objects.create(
-                nome="", user=user, funcao=""
-            )
-        except Exception as e:
-            user.delete()
-            raise e
-
-        return user
-
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
