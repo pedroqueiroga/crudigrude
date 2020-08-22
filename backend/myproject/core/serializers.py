@@ -13,6 +13,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             'email',
             'groups',
         )
+        read_only_fields = ['groups']
         extra_kwargs = {
             'url': {'view_name': 'core:user-detail',},
             'groups': {'view_name': 'core:group-detail',},
@@ -53,7 +54,7 @@ class FuncionarioSerializer(serializers.HyperlinkedModelSerializer):
             'user',
             'departamento',
         )
-        read_only_fields = ['user']
+        read_only_fields = ['user', 'departamento']
         extra_kwargs = {
             'url': {'view_name': 'core:funcionario-detail',},
             'departamento': {'view_name': 'core:departamento-detail',},

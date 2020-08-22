@@ -1,5 +1,5 @@
 from django.contrib.auth.models import Group, User
-from rest_framework import permissions, viewsets
+from rest_framework import mixins, permissions, viewsets
 
 from .models import Departamento, Funcionario
 from .serializers import (DepartamentoSerializer, FuncionarioSerializer,
@@ -8,7 +8,7 @@ from .serializers import (DepartamentoSerializer, FuncionarioSerializer,
 
 class UserViewSet(viewsets.ModelViewSet):
     '''
-    This viewset automatically provides `list` and `detail` actions for users.
+    This viewset provides `list`, `detail`, `update`, `delete`, `create` actions for users.
     '''
 
     queryset = User.objects.all().order_by('-date_joined')
@@ -16,9 +16,9 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 
-class GroupViewSet(viewsets.ModelViewSet):
+class GroupViewSet(viewsets.ReadOnlyModelViewSet):
     '''
-    This viewset automatically provides `list` and `detail` actions for groups.
+    This viewset provides `list` and `detail` actions for groups.
     '''
 
     queryset = Group.objects.all()
@@ -26,9 +26,14 @@ class GroupViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 
-class FuncionarioViewSet(viewsets.ModelViewSet):
+class FuncionarioViewSet(
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet,
+):
     '''
-    This viewset automtically provides `list` and `detail` actions for funcionarios.
+    This viewset provides `list`, `detail` and `update` actions for funcionarios.
     '''
 
     queryset = Funcionario.objects.all()
@@ -36,7 +41,7 @@ class FuncionarioViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 
-class DepartamentoViewSet(viewsets.ModelViewSet):
+class DepartamentoViewSet(viewsets.ReadOnlyModelViewSet):
     '''
     This viewset automtically provides `list` and `detail` actions for departamentos.
     '''
