@@ -11,9 +11,9 @@ class Departamento(models.Model):
 
 class Funcionario(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE,)
-    nome = models.CharField(max_length=128)
-    funcao = models.CharField(max_length=128)
-    idade = models.PositiveSmallIntegerField()
+    nome = models.CharField(max_length=128, null=True)
+    funcao = models.CharField(max_length=128, null=True)
+    idade = models.PositiveSmallIntegerField(null=True)
     departamento = models.ForeignKey(
         Departamento, on_delete=models.SET_NULL, null=True,
     )
