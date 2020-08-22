@@ -2,6 +2,7 @@ from django.contrib.auth.models import Group, User
 from rest_framework import mixins, permissions, viewsets
 
 from .models import Departamento, Funcionario
+from .permissions import CustomUserPermission, IsOwnerOrReadOnly, IsSelfOrAdmin
 from .serializers import (DepartamentoSerializer, FuncionarioSerializer,
                           GroupSerializer, UserSerializer)
 
@@ -13,7 +14,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [CustomUserPermission, IsSelfOrAdmin]
 
 
 class GroupViewSet(viewsets.ReadOnlyModelViewSet):
@@ -23,7 +24,6 @@ class GroupViewSet(viewsets.ReadOnlyModelViewSet):
 
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
 
 class FuncionarioViewSet(
@@ -38,7 +38,10 @@ class FuncionarioViewSet(
 
     queryset = Funcionario.objects.all()
     serializer_class = FuncionarioSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [
+        permissions.IsAuthenticatedOrReadOnly,
+        IsOwnerOrReadOnly,
+    ]
 
 
 class DepartamentoViewSet(viewsets.ReadOnlyModelViewSet):
@@ -48,4 +51,3 @@ class DepartamentoViewSet(viewsets.ReadOnlyModelViewSet):
 
     queryset = Departamento.objects.all()
     serializer_class = DepartamentoSerializer
-    permission_classes = [permissions.IsAuthenticated]
