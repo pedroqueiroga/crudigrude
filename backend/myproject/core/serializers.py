@@ -12,11 +12,13 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             'username',
             'email',
             'groups',
+            'funcionario',
         )
-        read_only_fields = ['groups']
+        read_only_fields = ['groups', 'funcionario']
         extra_kwargs = {
             'url': {'view_name': 'core:user-detail',},
             'groups': {'view_name': 'core:group-detail',},
+            'funcionario': {'view_name': 'core:funcionario-detail',},
         }
 
 
