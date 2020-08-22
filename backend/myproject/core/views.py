@@ -29,6 +29,7 @@ class GroupViewSet(viewsets.ReadOnlyModelViewSet):
 
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
+    pagination_class = None
 
 
 class FuncionarioViewSet(
@@ -41,12 +42,27 @@ class FuncionarioViewSet(
     This viewset provides `list`, `detail` and `update` actions for funcionarios.
     '''
 
-    queryset = Funcionario.objects.all()
+    queryset = Funcionario.objects.all().order_by('-id')
     serializer_class = FuncionarioSerializer
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly,
         IsOwnerOrReadOnly,
     ]
+
+    def get_queryset(self):
+        queryset = super(FuncionarioViewSet, self).get_queryset()
+        order_by = self.request.query_params.get('orderby', '')
+        if order_by:
+            try:
+                # categories and directions
+                order_by_cat, order_by_dir, *_ = [*order_by.split(','), '']
+                order_by_sign = '-' if order_by_dir == 'desc' else ''
+                queryset = queryset.order_by(
+                    ''.join([order_by_sign, order_by_cat])
+                )
+            except:
+                pass
+        return queryset
 
 
 class DepartamentoViewSet(viewsets.ReadOnlyModelViewSet):
@@ -54,5 +70,5 @@ class DepartamentoViewSet(viewsets.ReadOnlyModelViewSet):
     This viewset automtically provides `list` and `detail` actions for departamentos.
     '''
 
-    queryset = Departamento.objects.all()
+    queryset = Departamento.objects.all().order_by('-nome')
     serializer_class = DepartamentoSerializer
