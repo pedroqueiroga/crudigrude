@@ -48,8 +48,6 @@ class DepartamentoSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class FuncionarioSerializer(serializers.HyperlinkedModelSerializer):
-    departamento = DepartamentoSerializer(many=False, required=True)
-
     class Meta:
         model = Funcionario
         fields = (
@@ -64,5 +62,6 @@ class FuncionarioSerializer(serializers.HyperlinkedModelSerializer):
         read_only_fields = ['user']
         extra_kwargs = {
             'url': {'view_name': 'core:funcionario-detail',},
+            'departamento': {'view_name': 'core:departamento-detail',},
             'user': {'view_name': 'core:user-detail',},
         }

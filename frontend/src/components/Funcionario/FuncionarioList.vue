@@ -11,7 +11,7 @@
   <v-list>
     <v-list-item-group color="primary">
       <v-list-item
-        v-for="(item, i) in funcionarios.results"
+        v-for="(item, i) in funcionariosResults"
         :key="i"
         :to="{name:'funcionario-detail',params:{ id: item.id }}"
         >
@@ -71,6 +71,12 @@ export default {
     funcionarios() {
       return this.$store.state.funcionarios;
     },
+    funcionariosResults() {
+      return this.$store.getters.funcionariosResults;
+    },
+    departamentos() {
+      return this.$store.state.departamentos;
+    },
   },
   
   methods: {
@@ -89,10 +95,24 @@ export default {
           this.snackbar = true;
         });
     },
+    fetchDepartamentos() {
+      return this.$store.dispatch('fetchDepartamentos')
+        .catch(error => {
+          console.log(error);
+          this.snackbar = true;
+          this.serverError = true;
+        });
+    },
   },
   
   created() {
-    this.fetchList();
+    if (!this.departamentos) {
+      this.fetchDepartamentos().then(() => {
+        return this.fetchList();
+      });
+    } else if (!this.funcionarios) {
+      this.fetchList();
+    }
   },
 }
 </script>

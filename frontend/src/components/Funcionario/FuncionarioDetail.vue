@@ -24,7 +24,7 @@
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <span
-        v-if="funcionario && !editting"
+        v-if="funcionario && departamentos && !editting"
         >
         {{ funcionario.nome }}
       </span>
@@ -61,7 +61,7 @@
     <v-row
       align="center"
       justify="center"
-      v-else-if="!funcionario"
+      v-else-if="!funcionario || !departamentos"
       >
       <v-progress-circular
         indeterminate
@@ -191,6 +191,12 @@ export default {
         dep = dep.nome
       );
     },
+    deptosUrlNome() {
+      return this.$store.state.deptosUrlNome;
+    },
+    funcionariosResults() {
+      return this.$store.getters.funcionariosResults;
+      }
   },
   methods: {
     backToList() {
@@ -201,7 +207,11 @@ export default {
         .then(response => {
           if (response.status == 200) {
             const funcionario = response.data;
-            funcionario.departamento = funcionario.departamento.nome;
+            const departamento = this.deptosUrlNome[funcionario.departamento]
+            if (!departamento) {
+              Promise.reject(response);
+            }
+            funcionario.departamento = departamento;
             this.funcionario = funcionario;
             this.nome = this.funcionario.nome;
             this.idade = this.funcionario.idade;
@@ -212,13 +222,13 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          console.log('err',error);
           this.fetchError = true;
           this.snackbar = true;
         });
     },
     fetchDepartamentos() {
-      this.$store.dispatch('fetchDepartamentos')
+      return this.$store.dispatch('fetchDepartamentos')
         .catch(error => {
           console.log(error);
           this.departamentosError = true;
@@ -235,7 +245,7 @@ export default {
         this.fetchDepartamentos();
       }
     },
-
+    
     confirmEdit() {
       api.updateFuncionario(
         this.funcionarioId,
@@ -254,7 +264,7 @@ export default {
         this.editError = true;
       });
     },
-
+    
     cancelEdit() {
       this.editting = false;
       this.nome = this.funcionario.nome;
@@ -266,21 +276,25 @@ export default {
   
   created() {
     setTimeout(() => {
-      try {
-        const funcionario = this.$store.state.funcionarios.results
-              .filter(funcionario => funcionario.id === this.funcionarioId)[0];
-        if (!funcionario) {
-          this.fetchFuncionario();
-        } else {
-          this.funcionario = funcionario;
-        }
-      } catch {
-        this.fetchFuncionario();
-      }
       const departamentos = this.$store.departamentos;
       if (!departamentos) {
-        this.fetchDepartamentos();
-      }
+        this.fetchDepartamentos().then(() => {
+          try {
+            const funcionario = this.funcionariosResults.filter(funcionario =>
+              funcionario.id === this.funcionarioId
+            )[0];
+            if (!funcionario) {
+              this.fetchFuncionario();
+            } else {
+              const departamento = this.deptosUrlNome[funcionario.departamento]
+              funcionario.departamento = departamento;
+              this.funcionario = funcionario;
+            }
+          } catch {
+            this.fetchFuncionario();
+          }
+        });
+      } else { this.fetchfuncionario(); }
     }, 1500);
   },
 }

@@ -22,7 +22,12 @@ const api = {
   updateFuncionario: function updateFuncionario(id, nome, funcao, idade, departamento) {
     console.log(nome, funcao, idade, departamento);
     const url = `funcionarios/${id}/`;
-    return instance.put(url);
+    return instance.put(url, {
+      nome,
+      funcao,
+      idade,
+      departamento,
+    });
   },
 };
 

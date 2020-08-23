@@ -9,6 +9,18 @@ export default new Vuex.Store({
   state: {
     funcionarios: null,
     departamentos: null,
+    deptosUrlNome: null,
+  },
+  getters: {
+    funcionariosResults: (state) => {
+      console.log(state.funcionarios.results);
+      console.log('^state.funcionarios.results^');
+      return state.funcionarios.results?.map(funcionario => {
+        const f = funcionario;
+        f.departamento = state.deptosUrlNome[funcionario.departamento];
+        return f;
+      });
+    },
   },
   mutations: {
     setFuncionarios(state, funcionarios) {
@@ -17,16 +29,15 @@ export default new Vuex.Store({
     setDepartamentos(state, departamentos) {
       state.departamentos = departamentos;
     },
+    setDeptosUrlNome(state, deptosUrlNome) {
+      state.deptosUrlNome = deptosUrlNome;
+    },
   },
   actions: {
     fetchFuncionarios(context) {
       return api.fetchFuncionarios().then(response => {
         if (response.status === 200) {
           const funcionarios = response.data;
-          for (let i = 0; i < funcionarios.count; i++) {
-            const funcionario = funcionarios.results[i];
-            funcionario.departamento = funcionario.departamento.nome;
-          }
           context.commit('setFuncionarios', funcionarios);
         } else {
           Promise.reject(response);
@@ -37,6 +48,13 @@ export default new Vuex.Store({
     fetchDepartamentos(context) {
       return api.fetchDepartamentos().then(response => {
         if (response.status === 200) {
+          const data = response.data;
+          const newDep = {};
+          for (const dep of data) {
+            newDep[dep.url] = dep.nome;
+          }
+          context.commit('setDeptosUrlNome', newDep);
+
           context.commit('setDepartamentos', response.data);
         } else {
           Promise.reject(response);
