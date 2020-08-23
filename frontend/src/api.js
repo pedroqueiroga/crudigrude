@@ -10,6 +10,10 @@ const api = {
     const url = 'funcionarios/';
     return instance.get(url);
   },
+  fetchFuncionario: function fetchFuncionario(id) {
+    const url = `funcionarios/${id}/`;
+    return instance.get(url);
+  },
 };
 
 export default api;

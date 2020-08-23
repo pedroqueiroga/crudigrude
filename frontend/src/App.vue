@@ -38,22 +38,15 @@
 
     <v-content>
       <v-container>
-        <FuncionarioList/>
+        <router-view></router-view>
       </v-container>
     </v-content>
   </v-app>
 </template>
 
 <script>
-import FuncionarioList from './components/FuncionarioList';
-
-
 export default {
   name: 'App',
-
-  components: {
-    FuncionarioList
-  },
 
   data: () => ({
     //

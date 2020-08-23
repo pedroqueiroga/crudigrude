@@ -17,8 +17,13 @@ export default new Vuex.Store({
   actions: {
     fetchFuncionarios(context) {
       return api.fetchFuncionarios().then(response => {
-        if (response.status == 200) {
-          context.commit('setFuncionarios', response.data);
+        if (response.status === 200) {
+          const funcionarios = response.data;
+          for (let i = 0; i < funcionarios.count; i++) {
+            const funcionario = funcionarios.results[i];
+            funcionario.departamento = funcionario.departamento.nome;
+          }
+          context.commit('setFuncionarios', funcionarios);
         } else {
           Promise.reject(response);
         }

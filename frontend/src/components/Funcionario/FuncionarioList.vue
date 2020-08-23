@@ -14,10 +14,14 @@
         v-for="(item, i) in funcionarios.results"
         :key="i"
         >
-        <v-list-item-content>
-          <v-list-item-title v-text="item.nome"></v-list-item-title>
-          <v-list-item-subtitle v-text="item.departamento"></v-list-item-subtitle>
-        </v-list-item-content>
+        <router-link
+          :to="{name:'funcionario-detail',params:{ id: item.id }}"
+          >
+          <v-list-item-content>
+            <v-list-item-title v-text="item.nome"></v-list-item-title>
+            <v-list-item-subtitle v-text="item.departamento"></v-list-item-subtitle>
+          </v-list-item-content>
+        </router-link>
       </v-list-item>
     </v-list-item-group>
   </v-list>
