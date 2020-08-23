@@ -37,11 +37,7 @@ export default new Vuex.Store({
     fetchDepartamentos(context) {
       return api.fetchDepartamentos().then(response => {
         if (response.status === 200) {
-          console.log('deps', response);
-          const departamentos = response.data.map(dep =>
-            dep = dep.nome
-          );
-          context.commit('setDepartamentos', departamentos);
+          context.commit('setDepartamentos', response.data);
         } else {
           Promise.reject(response);
         }

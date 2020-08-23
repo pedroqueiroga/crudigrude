@@ -76,12 +76,29 @@
         </v-card-text>
         <v-autocomplete
           class="ml-3 mr-3"
-          :items="departamentos"
+          :items="departamentosOptions"
           v-else-if="departamentos"
           label="Departamento"
           v-model="departamento"
           >
         </v-autocomplete>
+      </v-row>
+      <v-divider></v-divider>
+      <v-row>
+        <v-card-text
+          v-if="!editting"
+          >
+          <strong>Função:</strong> {{ funcionario.funcao }}
+        </v-card-text>
+        <v-col
+          v-else
+          >
+          <v-text-field
+            label="Função"
+            v-model="funcao"
+            >
+          </v-text-field>
+        </v-col>
       </v-row>
       <v-divider></v-divider>
       <v-row>
@@ -157,7 +174,12 @@ export default {
       return this.$route.params.id;
     },
     departamentos() {
-      return this.$store.state.departamentos
+      return this.$store.state.departamentos;
+    },
+    departamentosOptions() {
+      return this.$store.state.departamentos.map(dep =>
+        dep = dep.nome
+      );
     },
   },
   methods: {
