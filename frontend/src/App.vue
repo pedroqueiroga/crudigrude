@@ -6,8 +6,8 @@
       color="primary"
       dark
       >
-      <span class="title ml-3 mr-5">
-        CRUD<span class="font-weight-light">IGRUDE</span>
+      <span class="d-none d-sm-inline title ml-3 mr-5">
+        CRUD<span class="d-none d-md-inline font-weight-light">IGRUDE</span>
       </span>
 
       <v-text-field
@@ -23,7 +23,12 @@
         class="ml-3 mr-3"
         outlined
         >
-        entrar
+        <span class="d-none d-sm-inline">
+          entrar
+        </span>
+        <v-icon class="d-sm-none">
+          mdi-login
+        </v-icon>
       </v-btn>
       <v-spacer></v-spacer>
 
@@ -31,7 +36,7 @@
         href="#"
         text
       >
-        <span class="mr-2">Ver no GitHub</span>
+        <span class="d-none d-md-inline mr-2">Ver no GitHub</span>
         <v-icon>mdi-github</v-icon>
       </v-btn>
     </v-app-bar>
