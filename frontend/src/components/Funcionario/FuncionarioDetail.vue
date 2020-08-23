@@ -58,23 +58,36 @@ export default {
     backToList() {
       this.$router.push({ name: 'funcionario-list' });
     },
+    fetchFuncionario() {
+      api.fetchFuncionario(this.funcionarioId)
+        .then(response => {
+          if (response.status == 200) {
+            this.funcionario = response.data;
+          } else {
+            Promise.reject(response);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+          this.fetchError = true;
+        });
+    },
   },
   
   created() {
     setTimeout(() => {
-    api.fetchFuncionario(this.funcionarioId)
-      .then(response => {
-        if (response.status == 200) {
-          this.funcionario = response.data;
+      try {
+        const funcionario = this.$store.state.funcionarios.results
+              .filter(funcionario => funcionario.id === this.funcionarioId)[0];
+        if (!funcionario) {
+          this.fetchFuncionario();
         } else {
-          Promise.reject(response);
+          this.funcionario = funcionario;
         }
-      })
-      .catch(error => {
-        console.log(error);
-        this.fetchError = true;
-      });
-      }, 1500);
+      } catch {
+        this.fetchFuncionario();
+      }
+    }, 1500);
   },
 }
 </script>
