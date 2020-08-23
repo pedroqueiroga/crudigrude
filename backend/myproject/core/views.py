@@ -1,4 +1,5 @@
 from django.contrib.auth.models import Group, User
+from django.db.models import Q
 from rest_framework import mixins, permissions, viewsets
 
 from .models import Departamento, Funcionario
@@ -53,6 +54,17 @@ class FuncionarioViewSet(
     def get_queryset(self):
         queryset = super(FuncionarioViewSet, self).get_queryset()
         order_by = self.request.query_params.get('orderby', '')
+        search = self.request.query_params.get('search', '')
+        if search:
+            try:
+                search_keywords = search.split(' ')
+                query = Q()
+                for keyword in search_keywords:
+                    query |= Q(nome__contains=keyword)
+
+                queryset = queryset.filter(query)
+            except:
+                pass
         if order_by:
             try:
                 # categories and directions

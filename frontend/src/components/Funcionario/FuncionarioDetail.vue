@@ -328,27 +328,25 @@ export default {
   },
   
   created() {
-    setTimeout(() => {
-      const departamentos = this.departamentos;
-      if (!departamentos) {
-        this.fetchDepartamentos().then(() => {
-          try {
-            const funcionario = this.funcionariosResults.find(funcionario =>
-              funcionario.id === this.funcionarioId
-            );
-            if (!funcionario) {
-              this.fetchFuncionario();
-            } else {
-              const departamento = this.deptosUrlNome[funcionario.departamento]
-              funcionario.departamento = departamento;
-              this.funcionario = funcionario;
-            }
-          } catch {
+    const departamentos = this.departamentos;
+    if (!departamentos) {
+      this.fetchDepartamentos().then(() => {
+        try {
+          const funcionario = this.funcionariosResults.find(funcionario =>
+            funcionario.id === this.funcionarioId
+          );
+          if (!funcionario) {
             this.fetchFuncionario();
+          } else {
+            const departamento = this.deptosUrlNome[funcionario.departamento]
+            funcionario.departamento = departamento;
+            this.funcionario = funcionario;
           }
-        });
-      } else { this.fetchFuncionario(); }
-    }, 1500);
+        } catch {
+          this.fetchFuncionario();
+        }
+      });
+    } else { this.fetchFuncionario(); }
   },
 }
 </script>

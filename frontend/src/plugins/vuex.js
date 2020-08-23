@@ -44,7 +44,8 @@ export default new Vuex.Store({
   actions: {
     fetchFuncionarios(context, props) {
       const page = props?.page;
-      return api.fetchFuncionarios(page).then(response => {
+      const search = props?.search;
+      return api.fetchFuncionarios(page, search).then(response => {
         if (response.status === 200) {
           const funcionarios = response.data;
           context.commit('setFuncionarios', funcionarios);

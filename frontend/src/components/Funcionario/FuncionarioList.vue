@@ -26,6 +26,13 @@
 <v-content
   fill-height
   fluid
+  v-else-if="funcionarios &&  funcionarios.count == 0"
+  >
+  Sua busca não retornou nenhum resultado.
+</v-content>
+<v-content
+  fill-height
+  fluid
   v-else
   >
   <v-snackbar
@@ -95,7 +102,7 @@ export default {
       this.fetchList();
     },
     fetchList() {
-      this.$store.dispatch('fetchFuncionarios', { page: this.page })
+      this.$store.dispatch('fetchFuncionarios', { page: this.page, search: this.$route.query.search })
         .catch(error => {
           console.log(error);
           this.serverError = true;
@@ -115,11 +122,21 @@ export default {
   created() {
     if (!this.departamentos) {
       this.fetchDepartamentos().then(() => {
-        return this.fetchList();
+        return this.fetchList()
       });
     } else if (!this.funcionarios) {
       this.fetchList();
     }
   },
+
+  beforeRouteUpdate(to, from, next) {
+    if (this.$route.query.search) {
+      console.log('this', this.$route.query.search);
+      console.log('to', to.query.search);
+      console.log('from', from.query.search);
+      // fetch filtered list
+    }
+    next();
+  },    
 }
 </script>

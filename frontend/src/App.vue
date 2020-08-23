@@ -22,10 +22,12 @@
         hide-details
         label="Procurar Funcionário"
         prepend-inner-icon="mdi-magnify"
+        v-model="searchString"
         clearable
         class="ml-2"
         @focus="shouldShow = $vuetify.breakpoint.smAndUp || false"
         @blur="shouldShow = true"
+        @keydown.enter="search"
         ></v-text-field>
 
       <v-btn
@@ -68,11 +70,33 @@ export default {
 
   data: () => ({
     shouldShow: true,
+    searchString: null,
   }),
+  watch: {
+    '$route' () {
+
+        this.$router.go();
+
+    },
+  },
   methods: {
     goHome(){
       this.$router.push({ name: 'funcionario-list' });
+    },
+    search() {
+      if (this.searchString) {
+        const normalizedSearchString = this.searchString
+              .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        
+        console.log(normalizedSearchString, 'searchstring im trying to pass');
+        this.$router.push({ name: 'funcionario-list', query: { search: normalizedSearchString } })
+      } else {
+        this.$router.push({ name: 'funcionario-list' });
+      }
     }
-  }
+  },
+  created() {
+    this.searchString = this.$route.query.search;
+  },
 };
 </script>

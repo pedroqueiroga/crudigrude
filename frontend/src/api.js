@@ -12,11 +12,24 @@ const blankInstance = axios.create({
 
 const funcionariosUrl = 'funcionarios/';
 const api = {
-  fetchFuncionarios: function fetchFuncionarios(page) {
+  fetchFuncionarios: function fetchFuncionarios(page, search) {
     let url = funcionariosUrl;
-    if (page) {
-      url += `?page=${page}`;
+    let searchurl = '';
+    let pageurl = '';
+    if (search) {
+      searchurl += `search=${search}`;
     }
+    if (page) {
+      pageurl += `page=${page}`;
+    }
+    if (search && page) {
+      url += `?${searchurl}&${pageurl}`;
+    } else if (search) {
+      url += `?${searchurl}`;
+    } else if (page) {
+      url += `?${pageurl}`;
+    }
+    console.log('im sending the string', url);
     return instance.get(url);
   },
   fetchFuncionario: function fetchFuncionario(id) {
