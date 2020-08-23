@@ -280,9 +280,9 @@ export default {
       if (!departamentos) {
         this.fetchDepartamentos().then(() => {
           try {
-            const funcionario = this.funcionariosResults.filter(funcionario =>
+            const funcionario = this.funcionariosResults.find(funcionario =>
               funcionario.id === this.funcionarioId
-            )[0];
+            );
             if (!funcionario) {
               this.fetchFuncionario();
             } else {
