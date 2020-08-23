@@ -195,7 +195,7 @@ export default {
       return 'Idade precisa ser positiva';
     },
     nomeRule: nome => {
-      if (!nome.trim()) return 'Nome é obrigatório'
+      if (!nome?.trim()) return 'Nome é obrigatório'
       return true;
     },
   }),

@@ -44,8 +44,9 @@
       <v-spacer></v-spacer>
 
       <v-btn
-        href="#"
+        href="https://github.com/pedroqueiroga/crudigrude"
         text
+        target="_blank"
         v-show="shouldShow"
       >
         <span class="d-none d-md-inline mr-2">Ver no GitHub</span>

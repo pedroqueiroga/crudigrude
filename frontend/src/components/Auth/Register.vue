@@ -3,9 +3,6 @@
   align="center"
   justify="center"
   >
-  {{ email }}
-  {{ username }}
-  {{ password }}
   <v-card
     max-width=600
     >
@@ -52,6 +49,23 @@
       </router-link>
     </v-container>
   </v-card>
+  <v-snackbar
+    v-model="snackbar"
+    top
+    :color="createSuccess ? 'success' : 'error'"
+    >
+    <span
+      v-if="createSuccess"
+      >
+      Conta criada com sucesso!
+    </span>
+    <span v-else-if="snackbarText && snackbarText.length > 0">
+      {{ snackbarText }}
+    </span>
+    <span v-else>
+      Erro!
+    </span>
+  </v-snackbar>
 </v-row>
 </template>
 
@@ -61,6 +75,9 @@ export default {
   name: 'Register',
 
   data: () => ({
+    snackbar: false,
+    snackbarText: null,
+    createSuccess: false,
     username: null,
     email: null,
     password: null,
@@ -94,10 +111,42 @@ export default {
         this.password
       ).then(response => {
         console.log(response);
+        this.createSuccess = true;
+        this.snackbar = true;
         const url = response.data.funcionario.split('/api/');
-        this.$router.push(url[1]);
+        this.$router.push(url[1]).then().catch(error => {
+          console.log(error);
+          this.snackbar = true;
+          this.createSuccess = false;
+          this.snackbarText = 'Conta criada com sucesso, porém não foi possível acessar o perfil. Tente novamente mais tarde.';
+        });
       }).catch(error => {
+        this.createSuccess = false;
         console.log('erro tentando criar conta', error);
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.log(error.response.data);
+          this.snackbarText = ''
+          for (const er in error.response.data) {
+            this.snackbarText += error.response.data[er].join('\n') + '\n';
+          }
+          this.snackbarText = this.snackbarText.trim();
+          this.snackbar = true;
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          // The request was made but no response was received
+          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+          // http.ClientRequest in node.js
+          console.log(error.request);
+          this.snackbar = true;
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          this.snackbar = true;
+          console.log('Error', error.message);
+        }
+        console.log(error.config);
       });
     },
   },
