@@ -5,7 +5,7 @@
   >
   <v-pagination
     v-model="page"
-    :length="Math.ceil(funcionarios.count / 10)"
+    :length="numPages()"
     class="secondary"
     ></v-pagination>
   <v-list>
@@ -62,10 +62,17 @@ export default {
   name: 'FuncionarioList',
   
   data: () => ({
+    page: 1,
     pageLen: 10,
     serverError: false,
     snackbar: false,
   }),
+
+  watch: {
+    page: function() {
+      this.fetchList();
+    },
+  },
   
   computed: {
     funcionarios() {
@@ -81,14 +88,14 @@ export default {
   
   methods: {
     numPages() {
-      return this.funcionarios.count / this.pageLen;
+      return Math.ceil(this.funcionarios.count / this.pageLen);
     },
     tryAgainButton() {
       this.snackbar = this.serverError = false;
       this.fetchList();
     },
     fetchList() {
-      this.$store.dispatch('fetchFuncionarios')
+      this.$store.dispatch('fetchFuncionarios', { page: this.page })
         .catch(error => {
           console.log(error);
           this.serverError = true;

@@ -5,14 +5,19 @@ const instance = axios.create({
   timeout: 1000,
 });
 
-const deleteInstance = axios.create({
+// essa daqui pode ser útil pois no backend estou usando hyperlinks
+const blankInstance = axios.create({
   timeout: 1000,
 });
 
 const funcionariosUrl = 'funcionarios/';
 const api = {
-  fetchFuncionarios: function fetchFuncionarios() {
-    return instance.get(funcionariosUrl);
+  fetchFuncionarios: function fetchFuncionarios(page) {
+    let url = funcionariosUrl;
+    if (page) {
+      url += `?page=${page}`;
+    }
+    return instance.get(url);
   },
   fetchFuncionario: function fetchFuncionario(id) {
     const url = `${funcionariosUrl}${id}/`;
@@ -33,8 +38,12 @@ const api = {
     });
   },
 
+  getRequest: function getRequest(url) {
+    return blankInstance.get(url);
+  },
+
   deleteRequest: function deleteRequest(url) {
-    return deleteInstance.delete(url);
+    return blankInstance.delete(url);
   },
 
   createUser: function createUser(username, email, password) {
