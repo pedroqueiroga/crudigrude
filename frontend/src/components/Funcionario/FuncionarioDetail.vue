@@ -32,6 +32,7 @@
         v-if="editting"
         label="Nome"
         clearable
+        :rules="[nomeRule]"
         v-model="nome"
         >
       </v-text-field>
@@ -192,7 +193,10 @@ export default {
     idadeRule: idade => {
       if (idade >= 0) return true;
       return 'Idade precisa ser positiva';
-    }
+    },
+    nomeRule: nome => {
+      if (!nome.trim()) return 'Nome é obrigatório'
+    },
   }),
   
   computed: {
@@ -266,11 +270,13 @@ export default {
     },
     
     confirmEdit() {
+      if (this.idade < 0) return;
+      if (!this.nome.trim()) return;
       const departamentoUrl = this.deptosNomeUrl[this.departamento]
       console.log(departamentoUrl);
       api.updateFuncionario(
         this.funcionarioId,
-        this.nome,
+        this.nome.trim(),
         this.funcao,
         this.idade,
         departamentoUrl,
