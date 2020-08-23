@@ -21,6 +21,14 @@ export default new Vuex.Store({
         return f;
       });
     },
+    deptosNomeUrl: (state) => {
+      // o inverso do deptosUrlNome
+      const inv = {};
+      for (const key in state.deptosUrlNome) {
+        inv[state.deptosUrlNome[key]] = key;
+      }
+      return inv;
+    },
   },
   mutations: {
     setFuncionarios(state, funcionarios) {

@@ -195,7 +195,10 @@ export default {
     },
     funcionariosResults() {
       return this.$store.getters.funcionariosResults;
-      }
+    },
+    deptosNomeUrl() {
+      return this.$store.getters.deptosNomeUrl;
+    }
   },
   methods: {
     backToList() {
@@ -246,12 +249,14 @@ export default {
     },
     
     confirmEdit() {
+      const departamentoUrl = this.deptosNomeUrl[this.departamento]
+      console.log(departamentoUrl);
       api.updateFuncionario(
         this.funcionarioId,
         this.nome,
         this.funcao,
         this.idade,
-        this.departamento
+        departamentoUrl,
       ).then(response => {
         console.log('update response:', response);
         this.fetchFuncionario();

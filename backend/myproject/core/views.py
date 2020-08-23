@@ -15,11 +15,12 @@ class UserViewSet(viewsets.ModelViewSet):
 
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
-    permission_classes = [
-        CreateUserPermissions,
-        ListForAdminsOnly,
-        IsSelfOrAdmin,
-    ]
+    permission_classes = [permissions.AllowAny]
+    # permission_classes = [
+    #     CreateUserPermissions,
+    #     ListForAdminsOnly,
+    #     IsSelfOrAdmin,
+    # ]
 
 
 class GroupViewSet(viewsets.ReadOnlyModelViewSet):
@@ -44,10 +45,10 @@ class FuncionarioViewSet(
 
     queryset = Funcionario.objects.all().order_by('-id')
     serializer_class = FuncionarioSerializer
-    permission_classes = [
-        permissions.IsAuthenticatedOrReadOnly,
-        IsOwnerOrReadOnly,
-    ]
+    permission_classes = [permissions.AllowAny]
+    #     permissions.IsAuthenticatedOrReadOnly,
+    #     IsOwnerOrReadOnly,
+    # ]
 
     def get_queryset(self):
         queryset = super(FuncionarioViewSet, self).get_queryset()
@@ -72,5 +73,6 @@ class DepartamentoViewSet(viewsets.ModelViewSet):
 
     queryset = Departamento.objects.all().order_by('-nome')
     serializer_class = DepartamentoSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [permissions.AllowAny]
+    # permission_classes = [IsAdminOrReadOnly]
     pagination_class = None
