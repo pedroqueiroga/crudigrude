@@ -6,9 +6,15 @@
       color="primary"
       dark
       >
-      <span class="d-none d-sm-inline title ml-3 mr-5">
-        CRUD<span class="d-none d-md-inline font-weight-light">IGRUDE</span>
-      </span>
+      <v-btn
+        text
+        @click="goHome"
+        v-show="shouldShow"
+        >
+        <span class="title">C<span class="d-none d-sm-inline title ">RUD<span class="d-none d-md-inline font-weight-light">IGRUDE</span>
+        </span>
+        </span>
+      </v-btn>
 
       <v-text-field
         solo-inverted
@@ -17,11 +23,16 @@
         label="Procurar Funcionário"
         prepend-inner-icon="mdi-magnify"
         clearable
+        class="ml-2"
+        @focus="shouldShow = $vuetify.breakpoint.smAndUp || false"
+        @blur="shouldShow = true"
         ></v-text-field>
 
       <v-btn
         class="ml-3 mr-3"
         outlined
+        :to="{ name: 'register' }"
+        v-show="shouldShow"
         >
         <span class="d-none d-sm-inline">
           entrar
@@ -35,6 +46,7 @@
       <v-btn
         href="#"
         text
+        v-show="shouldShow"
       >
         <span class="d-none d-md-inline mr-2">Ver no GitHub</span>
         <v-icon>mdi-github</v-icon>
@@ -54,7 +66,12 @@ export default {
   name: 'App',
 
   data: () => ({
-    //
+    shouldShow: true,
   }),
+  methods: {
+    goHome(){
+      this.$router.push({ name: 'funcionario-list' });
+    }
+  }
 };
 </script>
