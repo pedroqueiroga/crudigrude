@@ -1,9 +1,14 @@
 <template>
-  <v-container>
+<v-container>
+  <div v-if="funcionarios">
+    <v-pagination
+      v-model="page"
+      :length="funcionarios.next + funcionarios.previous"
+      ></v-pagination>
     <v-list>
       <v-list-item-group color="primary">
         <v-list-item
-          v-for="(item, i) in funcionarios"
+          v-for="(item, i) in funcionarios.results"
           :key="i"
           >
           <v-list-item-content>
@@ -13,7 +18,13 @@
         </v-list-item>
       </v-list-item-group>
     </v-list>
-  </v-container>
+  </div>
+  <v-progress-circular
+    indeterminate
+    v-else
+    color="secondary"
+    ></v-progress-circular>
+</v-container>
 </template>
 
 <script>
@@ -25,5 +36,10 @@
         return this.$store.state.funcionarios
       },
     },
+    
+    created() {
+      this.$store.dispatch('fetchFuncionarios')
+    },
+      
   }
 </script>
