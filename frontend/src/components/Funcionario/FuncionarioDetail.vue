@@ -173,7 +173,6 @@ export default {
     departamento: null,
     idade: null,
     idadeRule: idade => {
-      if (!idade.trim()) return true;
       if (idade >= 0) return true;
       return 'Idade precisa ser positiva';
     }
