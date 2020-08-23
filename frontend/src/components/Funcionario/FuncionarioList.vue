@@ -15,6 +15,7 @@
         :key="i"
         >
         <router-link
+          style="text-decoration: none;"
           :to="{name:'funcionario-detail',params:{ id: item.id }}"
           >
           <v-list-item-content>
