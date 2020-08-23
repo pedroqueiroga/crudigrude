@@ -37,20 +37,20 @@
     </v-app-bar>
 
     <v-content>
-      <HelloWorld/>
+      <FuncionarioList/>
     </v-content>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
+import FuncionarioList from './components/FuncionarioList';
 
 
 export default {
   name: 'App',
 
   components: {
-    HelloWorld
+    FuncionarioList
   },
 
   data: () => ({
