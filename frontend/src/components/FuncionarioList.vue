@@ -1,7 +1,7 @@
 <template>
 <v-card
   class="mx-auto"
-  v-if="funcionarios"
+  v-if="funcionarios && funcionarios.count"
   >
   <v-pagination
     v-model="page"
@@ -27,13 +27,29 @@
   fluid
   v-else
   >
+  <v-snackbar
+    v-model="snackbar"
+    top
+    color="error"
+    >
+    Erro ao tentar acessar o servidor!
+  </v-snackbar>
   <v-row
     align="center"
     justify="center"
     >
+    <v-btn
+      v-if="serverError"
+      color="secondary"
+      dark
+      @click="tryAgainButton"
+      >
+      Tentar novamente
+    </v-btn>
     <v-progress-circular
       indeterminate
       color="secondary"
+      v-else
       >
     </v-progress-circular>
   </v-row>
@@ -41,18 +57,41 @@
 </template>
 
 <script>
-  export default {
-    name: 'FuncionarioList',
-
-    computed: {
-      funcionarios() {
-        return this.$store.state.funcionarios
-      },
+export default {
+  name: 'FuncionarioList',
+  
+  data: () => ({
+    pageLen: 10,
+    serverError: false,
+    snackbar: false,
+  }),
+  
+  computed: {
+    funcionarios() {
+      return this.$store.state.funcionarios;
     },
-    
-    created() {
+  },
+  
+  methods: {
+    numPages() {
+      return this.funcionarios.count / this.pageLen;
+    },
+    tryAgainButton() {
+      this.snackbar = this.serverError = false;
+      this.fetchList();
+    },
+    fetchList() {
       this.$store.dispatch('fetchFuncionarios')
+        .catch(error => {
+          console.log(error);
+          this.serverError = true;
+          this.snackbar = true;
+        });
     },
-      
-  }
+  },
+  
+  created() {
+    this.fetchList();
+  },
+}
 </script>
