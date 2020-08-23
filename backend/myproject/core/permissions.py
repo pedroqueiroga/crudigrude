@@ -12,6 +12,15 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         return request.user == obj.user
 
 
+class IsAdminOrReadOnly(permissions.BasePermission):
+    """Makes sure that a user can only read, except for all mighty admin"""
+
+    def has_permission(self, request, view):
+        return (
+            request.method in permissions.SAFE_METHODS
+        ) or request.user.is_staff
+
+
 class CreateUserPermissions(permissions.BasePermission):
     """Users can only be created by admin or unauthenticated users"""
 

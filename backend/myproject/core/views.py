@@ -2,8 +2,8 @@ from django.contrib.auth.models import Group, User
 from rest_framework import mixins, permissions, viewsets
 
 from .models import Departamento, Funcionario
-from .permissions import (CreateUserPermissions, IsOwnerOrReadOnly,
-                          IsSelfOrAdmin, ListForAdminsOnly)
+from .permissions import (CreateUserPermissions, IsAdminOrReadOnly,
+                          IsOwnerOrReadOnly, IsSelfOrAdmin, ListForAdminsOnly)
 from .serializers import (DepartamentoSerializer, FuncionarioSerializer,
                           GroupSerializer, UserSerializer)
 
@@ -65,10 +65,12 @@ class FuncionarioViewSet(
         return queryset
 
 
-class DepartamentoViewSet(viewsets.ReadOnlyModelViewSet):
+class DepartamentoViewSet(viewsets.ModelViewSet):
     '''
-    This viewset automtically provides `list` and `detail` actions for departamentos.
+    This viewset provides `list`, `detail`, `update`, `delete`, `create` actions for users.
     '''
 
     queryset = Departamento.objects.all().order_by('-nome')
     serializer_class = DepartamentoSerializer
+    permission_classes = [permissions.IsAdminUser]
+    pagination_class = None

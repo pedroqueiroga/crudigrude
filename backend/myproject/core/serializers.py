@@ -9,6 +9,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = (
+            'id',
             'url',
             'username',
             'email',
@@ -34,10 +35,25 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         extra_kwargs = {'url': {'view_name': 'core:group-detail'}}
 
 
+class DepartamentoSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Departamento
+        fields = (
+            'url',
+            'nome',
+        )
+        extra_kwargs = {
+            'url': {'view_name': 'core:departamento-detail',},
+        }
+
+
 class FuncionarioSerializer(serializers.HyperlinkedModelSerializer):
+    departamento = DepartamentoSerializer(many=False, required=True)
+
     class Meta:
         model = Funcionario
         fields = (
+            'id',
             'url',
             'nome',
             'funcao',
@@ -45,21 +61,8 @@ class FuncionarioSerializer(serializers.HyperlinkedModelSerializer):
             'user',
             'departamento',
         )
-        read_only_fields = ['user', 'departamento']
+        read_only_fields = ['user']
         extra_kwargs = {
             'url': {'view_name': 'core:funcionario-detail',},
-            'departamento': {'view_name': 'core:departamento-detail',},
             'user': {'view_name': 'core:user-detail',},
-        }
-
-
-class DepartamentoSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Funcionario
-        fields = (
-            'url',
-            'nome',
-        )
-        extra_kwargs = {
-            'url': {'view_name': 'core:departamento-detail',},
         }
