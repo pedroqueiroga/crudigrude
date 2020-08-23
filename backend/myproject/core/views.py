@@ -72,5 +72,5 @@ class DepartamentoViewSet(viewsets.ModelViewSet):
 
     queryset = Departamento.objects.all().order_by('-nome')
     serializer_class = DepartamentoSerializer
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [IsAdminOrReadOnly]
     pagination_class = None
