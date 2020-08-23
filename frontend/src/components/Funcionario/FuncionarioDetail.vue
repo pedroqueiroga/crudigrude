@@ -196,6 +196,7 @@ export default {
     },
     nomeRule: nome => {
       if (!nome.trim()) return 'Nome é obrigatório'
+      return true;
     },
   }),
   
@@ -271,7 +272,7 @@ export default {
     
     confirmEdit() {
       if (this.idade < 0) return;
-      if (!this.nome.trim()) return;
+      if (!this.nome?.trim()) return;
       const departamentoUrl = this.deptosNomeUrl[this.departamento]
       console.log(departamentoUrl);
       api.updateFuncionario(

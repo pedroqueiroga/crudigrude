@@ -24,7 +24,6 @@ const api = {
   },
 
   updateFuncionario: function updateFuncionario(id, nome, funcao, idade, departamento) {
-    console.log(nome, funcao, idade, departamento);
     const url = `${funcionariosUrl}${id}/`;
     return instance.put(url, {
       nome,
@@ -37,6 +36,15 @@ const api = {
   deleteRequest: function deleteRequest(url) {
     return deleteInstance.delete(url);
   },
+
+  createUser: function createUser(username, email, password) {
+    const url = 'users/';
+    return instance.post(url, {
+      username,
+      email,
+      password,
+    });
+  }
 };
 
 export default api;
