@@ -1,5 +1,12 @@
 <template>
 <div>
+  <v-snackbar
+    v-model="snackbar"
+    top
+    color="error"
+    >
+    Erro ao tentar acessar o servidor!
+  </v-snackbar>
   <v-card dark>
     <v-card-title class="secondary">
       <v-btn
@@ -10,13 +17,22 @@
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <span
-        v-if="funcionario"
+        v-if="funcionario && !editting"
         >
         {{ funcionario.nome }}
       </span>
+      <v-text-field
+        v-if="editting"
+        label="Nome"
+        clearable
+        v-model="nome"
+        >
+      </v-text-field>
       <v-spacer></v-spacer>
       <v-btn
         text
+        @click="editting = !editting"
+        :disabled="editting || !funcionario"
         >
         <v-icon>mdi-pencil-outline</v-icon>
       </v-btn>
@@ -25,7 +41,20 @@
     <v-row
       align="center"
       justify="center"
-      v-if="!funcionario"
+      v-if="fetchError"
+      @click="tryAgainButton"
+      >
+      <v-btn
+        class="mb-3 mt-3"
+        >
+        tentar novamente
+      </v-btn>
+      
+    </v-row>
+    <v-row
+      align="center"
+      justify="center"
+      v-else-if="!funcionario"
       >
       <v-progress-circular
         indeterminate
@@ -36,26 +65,68 @@
         >
       </v-progress-circular>
     </v-row>
-    <div
+    <v-container
       v-else
       >
       <v-row>
         <v-card-text
-          class="ml-5"
+          v-if="!editting"
           >
           <strong>Departamento:</strong> {{ funcionario.departamento }}
         </v-card-text>
+        <v-autocomplete
+          class="ml-3 mr-3"
+          :items="departamentos"
+          v-else-if="departamentos"
+          label="Departamento"
+          v-model="departamento"
+          >
+        </v-autocomplete>
       </v-row>
       <v-divider></v-divider>
       <v-row>
         <v-card-text
-          class="ml-5"
+          v-if="!editting"
           >
           <strong>Idade:</strong> {{ funcionario.idade }}
         </v-card-text>
-        
-    </v-row>
-    </div>
+        <v-col
+          class="col-3"
+          v-else
+          >
+          <v-text-field
+            type="number"
+            label="Idade"
+            v-model="idade"
+            :rules="[idadeRule]"
+            >
+          </v-text-field>
+        </v-col>
+      </v-row>
+        <v-card-actions
+        v-if="editting"
+          >
+          <v-row
+            justify="center"
+            >
+          <v-btn
+            class="col-6 col-sm-4"
+            color="success"
+            @click="confirmEdit"
+            >
+            confirmar
+          </v-btn>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="error"
+            class="col-4"
+            @click="editting = false"
+            >
+            cancelar
+          </v-btn>
+          </v-row>
+        </v-card-actions>
+    </v-container>
   </v-card>
 </div>
 </template>
@@ -68,11 +139,25 @@ export default {
   data: () => ({
     funcionario: null,
     fetchError: false,
+    editting: false,
+    departamentosError: false,
+    snackbar: false,
+    departamento: null,
+    idade: null,
+    nome: null,
+    idadeRule: idade => {
+      if (!idade.trim()) return true;
+      if (idade >= 0) return true;
+      return 'Idade precisa ser positiva';
+    }
   }),
   
   computed: {
     funcionarioId() {
       return this.$route.params.id;
+    },
+    departamentos() {
+      return this.$store.state.departamentos
     },
   },
   methods: {
@@ -84,10 +169,8 @@ export default {
         .then(response => {
           if (response.status == 200) {
             const funcionario = response.data;
-            console.log(funcionario);
             funcionario.departamento = funcionario.departamento.nome;
             this.funcionario = funcionario;
-            console.log(this.funcionario);
           } else {
             Promise.reject(response);
           }
@@ -95,7 +178,30 @@ export default {
         .catch(error => {
           console.log(error);
           this.fetchError = true;
+          this.snackbar = true;
         });
+    },
+    fetchDepartamentos() {
+      this.$store.dispatch('fetchDepartamentos')
+        .catch(error => {
+          console.log(error);
+          this.departamentosError = true;
+          this.snackbar = true;
+        });
+    },
+    tryAgainButton() {
+      this.snackbar = false;
+      this.fetchError = false;
+      this.departamentosError = false;
+      this.fetchFuncionario();
+      const departamentos = this.$store.departamentos;
+      if (!departamentos) {
+        this.fetchDepartamentos();
+      }
+    },
+
+    confirmEdit() {
+      console.log('confirmed');
     },
   },
   
@@ -111,6 +217,10 @@ export default {
         }
       } catch {
         this.fetchFuncionario();
+      }
+      const departamentos = this.$store.departamentos;
+      if (!departamentos) {
+        this.fetchDepartamentos();
       }
     }, 1500);
   },

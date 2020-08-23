@@ -8,11 +8,15 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     funcionarios: null,
+    departamentos: null,
   },
   mutations: {
     setFuncionarios(state, funcionarios) {
       state.funcionarios = funcionarios;
-    }
+    },
+    setDepartamentos(state, departamentos) {
+      state.departamentos = departamentos;
+    },
   },
   actions: {
     fetchFuncionarios(context) {
@@ -28,6 +32,20 @@ export default new Vuex.Store({
           Promise.reject(response);
         }
         return context.state.funcionarios;
+      });
+    },
+    fetchDepartamentos(context) {
+      return api.fetchDepartamentos().then(response => {
+        if (response.status === 200) {
+          console.log('deps', response);
+          const departamentos = response.data.map(dep =>
+            dep = dep.nome
+          );
+          context.commit('setDepartamentos', departamentos);
+        } else {
+          Promise.reject(response);
+        }
+        return context.state.departamentos;
       });
     },
   },
