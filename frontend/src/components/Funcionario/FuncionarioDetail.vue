@@ -276,7 +276,7 @@ export default {
   
   created() {
     setTimeout(() => {
-      const departamentos = this.$store.departamentos;
+      const departamentos = this.departamentos;
       if (!departamentos) {
         this.fetchDepartamentos().then(() => {
           try {
@@ -294,7 +294,7 @@ export default {
             this.fetchFuncionario();
           }
         });
-      } else { this.fetchfuncionario(); }
+      } else { this.fetchFuncionario(); }
     }, 1500);
   },
 }
