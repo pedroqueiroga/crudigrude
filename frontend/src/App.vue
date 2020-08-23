@@ -37,7 +37,9 @@
     </v-app-bar>
 
     <v-content>
-      <FuncionarioList/>
+      <v-container>
+        <FuncionarioList/>
+      </v-container>
     </v-content>
   </v-app>
 </template>

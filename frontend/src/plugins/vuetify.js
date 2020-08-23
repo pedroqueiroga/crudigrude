@@ -10,10 +10,10 @@ export default new Vuetify({
       light: {
         primary: colors.purple.base,
         secondary: colors.teal.base,
-        accent: colors.deep - colors.purple.base,
+        accent: '#673ab7',
         error: colors.pink.base,
         warning: colors.amber.base,
-        info: colors.blue - colors.grey.base,
+        info: '#607d8b',
         success: colors.green.base
       },
     },
