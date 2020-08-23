@@ -1,9 +1,9 @@
 <template>
 <div>
-  <v-card color="white" dark>
+  <v-card dark>
     <v-card-title class="secondary">
       <v-btn
-        outlined
+        text
         @click="backToList"
         class="mr-3"
         >
@@ -14,6 +14,12 @@
         >
         {{ funcionario.nome }}
       </span>
+      <v-spacer></v-spacer>
+      <v-btn
+        text
+        >
+        <v-icon>mdi-pencil-outline</v-icon>
+      </v-btn>
     </v-card-title>
     <v-divider></v-divider>
     <v-row
@@ -30,11 +36,26 @@
         >
       </v-progress-circular>
     </v-row>
-    <v-card-subtitle
+    <div
       v-else
       >
-      {{ funcionario.departamento }}
-    </v-card-subtitle>
+      <v-row>
+        <v-card-text
+          class="ml-5"
+          >
+          <strong>Departamento:</strong> {{ funcionario.departamento }}
+        </v-card-text>
+      </v-row>
+      <v-divider></v-divider>
+      <v-row>
+        <v-card-text
+          class="ml-5"
+          >
+          <strong>Idade:</strong> {{ funcionario.idade }}
+        </v-card-text>
+        
+    </v-row>
+    </div>
   </v-card>
 </div>
 </template>
@@ -62,7 +83,11 @@ export default {
       api.fetchFuncionario(this.funcionarioId)
         .then(response => {
           if (response.status == 200) {
-            this.funcionario = response.data;
+            const funcionario = response.data;
+            console.log(funcionario);
+            funcionario.departamento = funcionario.departamento.nome;
+            this.funcionario = funcionario;
+            console.log(this.funcionario);
           } else {
             Promise.reject(response);
           }
