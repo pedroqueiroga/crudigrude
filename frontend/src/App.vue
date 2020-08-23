@@ -1,39 +1,38 @@
 <template>
   <v-app>
     <v-app-bar
-      app
+      app 
+      clipped-left
       color="primary"
       dark
-    >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
+      >
+      <span class="title ml-3 mr-5">
+        CRUD<span class="font-weight-light">IGRUDE</span>
+      </span>
 
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
+      <v-text-field
+        solo-inverted
+        flat
+        hide-details
+        label="Procurar Funcionário"
+        prepend-inner-icon="mdi-magnify"
+        clearable
+        ></v-text-field>
 
+      <v-btn
+        class="ml-3 mr-3"
+        outlined
+        >
+        entrar
+      </v-btn>
       <v-spacer></v-spacer>
 
       <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
+        href="#"
         text
       >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
+        <span class="mr-2">Ver no GitHub</span>
+        <v-icon>mdi-github</v-icon>
       </v-btn>
     </v-app-bar>
 
