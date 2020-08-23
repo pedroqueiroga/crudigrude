@@ -133,21 +133,38 @@
           <v-row
             justify="center"
             >
-          <v-btn
-            class="col-6 col-sm-4"
-            color="success"
-            @click="confirmEdit"
-            >
-            confirmar
-          </v-btn>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="error"
-            class="col-4"
-            @click="cancelEdit"
-            >
-            cancelar
-          </v-btn>
+            <v-btn
+              class="col-5"
+              color="success"
+              @click="confirmEdit"
+              >
+              confirmar
+            </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="primary"
+              class="col-4"
+              @click="cancelEdit"
+              >
+              cancelar
+            </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="error"
+              class="col-1 col-md-2"
+              @click="deleteIt"
+              >
+              <v-icon
+                class="d-md-none"
+                >
+                mdi-delete
+              </v-icon>
+              <span
+                class="d-none d-md-inline"
+                >
+                remover
+              </span>
+            </v-btn>
           </v-row>
         </v-card-actions>
     </v-container>
@@ -261,7 +278,14 @@ export default {
         console.log('update response:', response);
         this.fetchFuncionario();
         this.editting = false;
-        this.snackbarEditSuccess = true;
+        this.editSuccess = true;
+        this.snackbar = true;
+        this.$store.dispatch('fetchFuncionarios')
+          .catch(error => {
+            console.log(error);
+            this.fetchError = true;
+            this.snackbar = true;
+          });
       }).catch(error => {
         console.log('update error:', error);
         this.snackbar = true;
@@ -275,6 +299,24 @@ export default {
       this.funcao = this.funcionario.funcao;
       this.idade = this.funcionario.idade;
       this.departamento = this.funcionario.departamento;
+    },
+    deleteIt() {
+      api.deleteRequest(this.funcionario.user).then(response => {
+        console.log('delete response:', response);
+        this.$store.dispatch('fetchFuncionarios')
+          .then(() => {
+            this.$router.push({ name: 'funcionario-list' });
+          })
+          .catch(error => {
+            console.log(error);
+            this.fetchError = true;
+            this.snackbar = true;
+          });
+      }).catch(error => {
+        console.log('delete error:', error);
+        this.snackbar = true;
+        this.editError = true;
+      });
     },
   },
   
