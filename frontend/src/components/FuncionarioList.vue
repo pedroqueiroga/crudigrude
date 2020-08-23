@@ -1,9 +1,9 @@
 <template>
   <v-container>
     <v-list>
-      <v-list-item-group v-model="item" color="primary">
+      <v-list-item-group color="primary">
         <v-list-item
-          v-for="(item, i) in list"
+          v-for="(item, i) in funcionarios"
           :key="i"
           >
           <v-list-item-content>
@@ -20,12 +20,10 @@
   export default {
     name: 'FuncionarioList',
 
-    data: () => ({
-      list: [
-        { nome: 'funcionario 1', departamento: 'IT', },
-        { nome: 'funcionario 2', departamento: 'DESIGN', },
-        { nome: 'funcionario 3', departamento: 'SUPORTE', },
-      ],
-    }),
+    computed: {
+      funcionarios() {
+        return this.$store.state.funcionarios
+      },
+    },
   }
 </script>
