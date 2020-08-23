@@ -3,9 +3,16 @@
   <v-snackbar
     v-model="snackbar"
     top
-    color="error"
+    :color="editSuccess ? 'success' : 'error'"
     >
-    Erro ao tentar acessar o servidor!
+    <span
+      v-if="editSuccess"
+      >
+      Deu tudo certo!
+    </span>
+    <span v-else>
+      Erro ao tentar acessar o servidor!
+    </span>
   </v-snackbar>
   <v-card dark>
     <v-card-title class="secondary">
@@ -137,7 +144,7 @@
           <v-btn
             color="error"
             class="col-4"
-            @click="editting = false"
+            @click="cancelEdit"
             >
             cancelar
           </v-btn>
@@ -158,10 +165,13 @@ export default {
     fetchError: false,
     editting: false,
     departamentosError: false,
+    editError: false,
+    editSuccess: false,
     snackbar: false,
+    nome: null,
+    funcao: null,
     departamento: null,
     idade: null,
-    nome: null,
     idadeRule: idade => {
       if (!idade.trim()) return true;
       if (idade >= 0) return true;
@@ -193,6 +203,10 @@ export default {
             const funcionario = response.data;
             funcionario.departamento = funcionario.departamento.nome;
             this.funcionario = funcionario;
+            this.nome = this.funcionario.nome;
+            this.idade = this.funcionario.idade;
+            this.departamento = this.funcionario.departamento;
+            this.funcao = this.funcionario.funcao;
           } else {
             Promise.reject(response);
           }
@@ -223,7 +237,30 @@ export default {
     },
 
     confirmEdit() {
-      console.log('confirmed');
+      api.updateFuncionario(
+        this.funcionarioId,
+        this.nome,
+        this.funcao,
+        this.idade,
+        this.departamento
+      ).then(response => {
+        console.log('update response:', response);
+        this.fetchFuncionario();
+        this.editting = false;
+        this.snackbarEditSuccess = true;
+      }).catch(error => {
+        console.log('update error:', error);
+        this.snackbar = true;
+        this.editError = true;
+      });
+    },
+
+    cancelEdit() {
+      this.editting = false;
+      this.nome = this.funcionario.nome;
+      this.funcao = this.funcionario.funcao;
+      this.idade = this.funcionario.idade;
+      this.departamento = this.funcionario.departamento;
     },
   },
   
